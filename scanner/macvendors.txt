@@ -1,0 +1,48 @@
+001A2B Apple
+3C5AB4 Samsung
+F4F5D8 Dell
+A4C138 Xiaomi
+D850E6 Realtek
+FCFBFB Hewlett Packard
+B827EB Raspberry Pi
+E4F89C Lenovo
+
+44A3BB  Lenovo
+44:A3:BB:86:D5:CB     Lenovo
+44D9E7 ASUS
+F0D1A9 Intel
+8C8590 Huawei
+28CFE9 OnePlus
+5CF370 TP-Link
+EC086B Cisco
+00155D Microsoft
+18FE34 Espressif
+C43DC7 Google
+9CFC01 Sony
+B0C090 Oppo
+70EE50 Vivo
+4C3275 Nokia
+000C29 VMware
+080027 Oracle VirtualBox
+3CD92B Acer
+A0CEC8 LG
+1C1B0D Fujitsu
+002248 NETGEAR
+74867A Ubiquiti
+50C7BF MikroTik
+00163E Juniper
+000AF7 Broadcom
+0026B9 Hon Hai
+0024E8 Dell
+F8E43B Amazon
+DCA632 Roku
+84D6D0 Intel
+F4EC38 Sony
+40B076 Motorola
+64BC0C Aruba
+9CEFDF Panasonic
+0001C0 Cisco
+E8DE270 Canon
+BC305B Epson
+00259C HP
+188740 Android

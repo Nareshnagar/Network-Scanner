@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Network Scanner</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Network Scanner Dashboard</h1>
+
+        <!-- ================================================= -->
+        <!-- DEVICE DISCOVERY -->
+        <!-- ================================================= -->
+
+        <form method="POST">
+
+            <button type="submit" name="action" value="discover">
+
+                Discover Devices
+
+            </button>
+
+        </form>
+
+        <!-- ================================================= -->
+        <!-- DEVICES TABLE -->
+        <!-- ================================================= -->
+
+        {% if devices %}
+
+        <h2>Discovered Devices</h2>
+
+        <table>
+
+            <tr>
+
+                <th>IP Address</th>
+                <th>Hostname</th>
+                <th>MAC</th>
+                <th>Vendor</th>
+                <th>Latency</th>
+                <th>Status</th>
+                <th>Open Ports</th>
+                <th>Risk Score</th>
+                <th>Threat</th>
+
+            </tr>
+
+            {% for device in devices %}
+
+            <tr>
+
+                <td>{{ device.IP }}</td>
+
+                <td>{{ device.Hostname }}</td>
+
+                <td>{{ device.MAC }}</td>
+
+                <td>{{ device.Vendor }}</td>
+
+                <td>{{ device.Latency }}</td>
+
+                <td class="online">
+
+                    {{ device.Status }}
+
+                </td>
+
+                <!-- ========================================= -->
+                <!-- OPEN PORTS -->
+                <!-- ========================================= -->
+
+                <td>
+
+                    {% if device.ports %}
+
+                        {% for p in device.ports %}
+
+                            {{ p.Port }}
+
+                            {% if not loop.last %}
+                                ,
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        None
+
+                    {% endif %}
+
+                </td>
+
+                <!-- ========================================= -->
+                <!-- RISK SCORE -->
+                <!-- ========================================= -->
+
+                <td>
+
+                    {{ device.risk.risk_score }}/100
+
+                </td>
+
+                <!-- ========================================= -->
+                <!-- THREAT LEVEL -->
+                <!-- ========================================= -->
+
+                <td class="
+                    {% if device.risk.threat_level == 'CRITICAL' %}
+                        critical
+                    {% elif device.risk.threat_level == 'HIGH' %}
+                        high
+                    {% elif device.risk.threat_level == 'MEDIUM' %}
+                        medium
+                    {% else %}
+                        low
+                    {% endif %}
+                ">
+
+                    {{ device.risk.threat_level }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        {% endif %}
+
+
+        <!-- ================================================= -->
+        <!-- PORT SCANNER -->
+        <!-- ================================================= -->
+
+        <h2>Port Scanner</h2>
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="target_ip"
+                placeholder="Enter Target IP"
+                required
+            >
+
+            <button type="submit" name="action" value="scan_port">
+
+                Scan Ports
+
+            </button>
+
+        </form>
+
+
+        <!-- ================================================= -->
+        <!-- PORT RESULTS -->
+        <!-- ================================================= -->
+
+        {% if ports and ports|length > 0 %}
+
+        <h2>Port Scan Results</h2>
+
+        <table>
+
+            <tr>
+
+                <th>Port</th>
+                <th>Service</th>
+                <th>Banner</th>
+                <th>Risk</th>
+                <th>Status</th>
+
+            </tr>
+
+            {% for port in ports %}
+
+            <tr>
+
+                <td>{{ port.Port }}</td>
+
+                <td>{{ port.Service }}</td>
+
+                <td>{{ port.Banner }}</td>
+
+                <td class="
+                    {% if port.Risk == 'HIGH' %}
+                        high
+                    {% elif port.Risk == 'MEDIUM' %}
+                        medium
+                    {% else %}
+                        low
+                    {% endif %}
+                ">
+
+                    {{ port.Risk }}
+
+                </td>
+
+                <td>{{ port.Status }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        {% endif %}
+
+
+        <!-- ================================================= -->
+        <!-- AI RISK ASSESSMENT -->
+        <!-- ================================================= -->
+
+        {% if risk %}
+
+        <div class="risk-box">
+
+            <h2> Risk Assessment</h2>
+
+            <h3>
+
+                Risk Score:
+                {{ risk.risk_score }}/100
+
+            </h3>
+
+            <h3>
+
+                Threat Level:
+
+                <span class="
+                    {% if risk.threat_level == 'CRITICAL' %}
+                        critical
+                    {% elif risk.threat_level == 'HIGH' %}
+                        high
+                    {% elif risk.threat_level == 'MEDIUM' %}
+                        medium
+                    {% else %}
+                        low
+                    {% endif %}
+                ">
+
+                    {{ risk.threat_level }}
+
+                </span>
+
+            </h3>
+
+            <!-- ============================================= -->
+            <!-- THREAT METER -->
+            <!-- ============================================= -->
+
+            <div class="meter">
+
+                <div class="
+                    meter-fill
+
+                    {% if risk.threat_level == 'CRITICAL' %}
+                        critical-width
+                    {% elif risk.threat_level == 'HIGH' %}
+                        high-width
+                    {% elif risk.threat_level == 'MEDIUM' %}
+                        medium-width
+                    {% else %}
+                        low-width
+                    {% endif %}
+                ">
+
+                </div>
+
+            </div>
+
+            <!-- ============================================= -->
+            <!-- DETECTED RISKS -->
+            <!-- ============================================= -->
+
+            <h3>Detected Risks:</h3>
+
+            <ul>
+
+                {% for reason in risk.reasons %}
+
+                <li>{{ reason }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ================================================= -->
+        <!-- PDF REPORT -->
+        <!-- ================================================= -->
+
+        {% if report %}
+
+        <div class="report-section">
+
+            <a
+                href="{{ url_for('download_report', filename=report.split('/')[-1]) }}"
+                download
+                class="report-btn"
+            >
+
+                Download PDF Report
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
